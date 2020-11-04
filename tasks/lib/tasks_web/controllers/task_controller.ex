@@ -1,6 +1,5 @@
 defmodule TasksWeb.TaskController do
   use TasksWeb, :controller
-  alias Tasks.{Repo, Core.Task}
   @doc """
     Returns a list of tasks generated from the parameters provided
   """
@@ -64,9 +63,7 @@ defmodule TasksWeb.TaskController do
 
   # if recive an object tipe task Pattern matching %{"task" => task}
   def create(conn,params) do
-    IO.inspect(params, label: "project_params")
-    changeset = Task.changeset(%Task{}, params)
-    case Repo.insert(changeset) do
+    case Tasks.insert_task(params) do
       {:ok, task} ->
         conn
         |> put_status(:created)
@@ -79,23 +76,18 @@ defmodule TasksWeb.TaskController do
   end
 
   def update(conn,%{"id" => task_id, "status" => status}) do
-      try do
-        old_task = Repo.get!(Task, task_id)
-        changeset = Task.status_changeset(old_task, %{status: status})
-        case Repo.update(changeset) do
+        case Tasks.update_task(task_id, status) do
         {:ok, task} ->
           conn
           |> render("status.json", task: task)
-          {:error, task} ->
-            conn
-            |> put_status(:unprocessable_entity)
-            |> render("error.json", task: task)
-        end
-      rescue
-        Ecto.NoResultsError ->
-        conn
-        |> put_status(404)
-        |> json(%{errors: %{id:  "task not found"}})
+        {:error, :not_found} ->
+          conn
+          |> put_status(404)
+          |> json(%{errors: %{id:  "task not found"}})
+        {:error, task} ->
+          conn
+          |> put_status(:unprocessable_entity)
+          |> render("error.json", task: task)
       end
   end
 

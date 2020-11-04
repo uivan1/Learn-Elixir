@@ -13,10 +13,11 @@ defmodule TasksWeb.Router do
   scope "/task", TasksWeb do
     pipe_through [:api]
     options "/", TaskController, :nothing
+    options "/:id", TaskController, :nothing
 
     get "/", TaskController, :list
     post "/", TaskController, :create
-    put "/:id", TaskController, :update
+    patch "/:id", TaskController, :update
   end
 
 

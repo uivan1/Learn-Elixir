@@ -3,7 +3,7 @@ defmodule Tasks.Core do
   alias Tasks.Repo
   import Ecto.Query
 # funciones de unidad
-  def task_page(status, limit \\ 100, offset \\ 0) do
+  def task_page(status \\ nil, limit \\ 100, offset \\ 0) do
     query =
       Task
       |> fn(query) ->

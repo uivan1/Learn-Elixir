@@ -2,6 +2,7 @@ defmodule TasksWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
+  channel "tasks:*", TasksWeb.TasksChannel
   # channel "room:*", TasksWeb.RoomChannel
 
   # Socket params are passed from the client and can
