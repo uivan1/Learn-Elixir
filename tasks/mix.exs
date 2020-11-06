@@ -10,7 +10,14 @@ defmodule Tasks.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ],
     ]
   end
 
@@ -44,7 +51,9 @@ defmodule Tasks.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:ecto_enum, "~> 1.4"},
-      {:cors_plug, "~> 2.0"}
+      {:cors_plug, "~> 2.0"},
+      {:excoveralls, "~> 0.10", only: :test},
+      {:ex_doc, "~> 0.23", only: :dev, runtime: false},
     ]
   end
 

@@ -2,6 +2,9 @@ defmodule TasksWeb.TasksChannel do
   use TasksWeb, :channel
   alias Tasks.{Core, Repo}
   alias Tasks.Core.Task
+  @doc """
+    Returns a list of all task to join to chanel
+  """
   def join("tasks:board", _params, socket) do
     # IO.puts("+++++")
     data = Core.task_page();
@@ -9,6 +12,20 @@ defmodule TasksWeb.TasksChannel do
     {:ok,  data, socket}
   end
 
+  @doc """
+    Create a task and return to all channel
+
+  ## Example
+
+      iex>TasksWeb
+
+      %{ task: %{ name: "hola", description: "mundo"}}
+
+      iex>TasksWeb
+
+      {:error, %Ecto.Changeset{}}
+
+  """
   def handle_in("tasks:add",params, socket) do
     # IO.puts("+++")
     # IO.puts(name)
@@ -26,7 +43,27 @@ defmodule TasksWeb.TasksChannel do
         {:reply, {:error, response}, socket}
     end
   end
+@doc """
+    Update a task and return all tasks to all channel
 
+  ## Example
+
+      iex>TasksWeb
+
+      %{
+          items: _items,
+          page: _page,
+          records: _records,
+          total_pages: _total_pages,
+          total_records: _total_records
+      }
+
+
+      iex>TasksWeb
+
+      {:error, :cast_error}
+
+  """
   def handle_in("task:patch:" <> task_id,  %{"status" => status}, socket) do
     # IO.puts("+++")
     # IO.puts(id)

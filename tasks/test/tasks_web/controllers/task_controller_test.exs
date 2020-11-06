@@ -21,6 +21,29 @@ defmodule TasksWeb.TaskControllerTest do
       } = response
     end
 
+    test "Returns a list of tasks with a range valid" do
+      response =
+        build_conn()
+        |> get(
+          Routes.task_path(build_conn(), :list, %{
+            pagination: %{
+              limit: "10",
+              offset: "5"
+            }
+          })
+        )
+        |> json_response(:ok)
+
+      assert %{
+        "message" => "Successful list of tasks",
+        "data" => _items,
+        "records" => _records,
+        "total_records" => _total_records,
+        "page" => _page,
+        "total_pages" => _total_pages
+      } = response
+    end
+
     test "Error when status is an invalid value"  do
       conn = build_conn()
       response =
@@ -75,6 +98,46 @@ defmodule TasksWeb.TaskControllerTest do
       assert %{
         "errors" => %{
           "offset" => "offset needs to be a number"
+        }
+      } = response
+    end
+
+    test "Error when offset pagination is an invalid range"  do
+      conn = build_conn()
+      response =
+        conn
+        |> get(
+          Routes.task_path(conn, :list, %{
+            pagination: %{
+              offset: "-5"
+            }
+          })
+        )
+        |> json_response(:bad_request)
+
+      assert %{
+        "errors" => %{
+          "offset" => "Must be more than 0"
+        }
+      } = response
+    end
+
+    test "Error when limit pagination is an invalid range"  do
+      conn = build_conn()
+      response =
+        conn
+        |> get(
+          Routes.task_path(conn, :list, %{
+            pagination: %{
+              limit: "200"
+            }
+          })
+        )
+        |> json_response(:bad_request)
+
+      assert %{
+        "errors" => %{
+          "limit" => "Must be in the range 1 to 100"
         }
       } = response
     end

@@ -3,6 +3,30 @@ defmodule Tasks.Core do
   alias Tasks.Repo
   import Ecto.Query
 # funciones de unidad
+@doc """
+  Return a list with all the **task** according to the indicated parameters.
+
+  ## Example
+      iex> Tasks.Core.task_page()
+      %{
+        items: [
+          %Tasks.Core.Task{
+            __meta__: #Ecto.Schema.Metadata<:loaded, "tasks">,
+            description: "sdsad",
+            inserted_at: ~N[2020-11-02 16:50:31],
+            name: "ejemplo 2",
+            status: :to_do,
+            updated_at: ~N[2020-11-05 19:36:52],
+            uuid: "0c6edc79-1ee3-47bc-8df1-2b2aadc5201c"
+          },
+          ...
+        ]
+        page: _page,
+        records: _records,
+        total_pages: _total_pages,
+        total_records: _total_records
+      }
+  """
   def task_page(status \\ nil, limit \\ 100, offset \\ 0) do
     query =
       Task
